@@ -5,7 +5,7 @@ dotenv.config();
 
 const APP_SECRET = process.env.APP_SECRET
 
-function getUserId(context) {
+function authorizedUser(context) {
   const Authorization = context.request.get('Authorization')
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
@@ -19,5 +19,5 @@ function getUserId(context) {
 
 module.exports = {
   APP_SECRET,
-  getUserId,
+  authorizedUser,
 }

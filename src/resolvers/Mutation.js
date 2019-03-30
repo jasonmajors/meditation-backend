@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { APP_SECRET, getUserId } = require('../utils')
+const { APP_SECRET, authorizedUser } = require('../utils')
 
 /**
  * The resolver for the signup mutation
@@ -45,7 +45,7 @@ async function login(parent, args, context) {
 async function meditation(parent, args, context) {
   // Just abusing this to ensure the user is authenticated right now
   // Will at some point add a created_by field to the Meditation records
-  getUserId(context);
+  authorizedUser(context);
 
   const meditation = await context.prisma.createMeditation({
     title: args.title,
