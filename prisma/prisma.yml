@@ -1,4 +1,5 @@
-endpoint: http://localhost:4466
+endpoint: https://meditation-api-fd49909e9d.herokuapp.com
+
 datamodel: datamodel.prisma
 
 generate:
