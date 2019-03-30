@@ -157,7 +157,11 @@ export type MeditationOrderByInput =
   | "description_ASC"
   | "description_DESC"
   | "url_ASC"
-  | "url_DESC";
+  | "url_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type UserOrderByInput =
   | "id_ASC"
@@ -167,7 +171,11 @@ export type UserOrderByInput =
   | "email_ASC"
   | "email_DESC"
   | "password_ASC"
-  | "password_DESC";
+  | "password_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
 
 export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
@@ -234,6 +242,8 @@ export interface MeditationWhereInput {
   url_ends_with?: String;
   url_not_ends_with?: String;
   AND?: MeditationWhereInput[] | MeditationWhereInput;
+  OR?: MeditationWhereInput[] | MeditationWhereInput;
+  NOT?: MeditationWhereInput[] | MeditationWhereInput;
 }
 
 export type UserWhereUniqueInput = AtLeastOne<{
@@ -299,6 +309,8 @@ export interface UserWhereInput {
   password_ends_with?: String;
   password_not_ends_with?: String;
   AND?: UserWhereInput[] | UserWhereInput;
+  OR?: UserWhereInput[] | UserWhereInput;
+  NOT?: UserWhereInput[] | UserWhereInput;
 }
 
 export interface MeditationCreateInput {
@@ -344,6 +356,8 @@ export interface MeditationSubscriptionWhereInput {
   updatedFields_contains_some?: String[] | String;
   node?: MeditationWhereInput;
   AND?: MeditationSubscriptionWhereInput[] | MeditationSubscriptionWhereInput;
+  OR?: MeditationSubscriptionWhereInput[] | MeditationSubscriptionWhereInput;
+  NOT?: MeditationSubscriptionWhereInput[] | MeditationSubscriptionWhereInput;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -353,6 +367,8 @@ export interface UserSubscriptionWhereInput {
   updatedFields_contains_some?: String[] | String;
   node?: UserWhereInput;
   AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
+  NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
 }
 
 export interface NodeNode {

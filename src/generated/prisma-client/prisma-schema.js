@@ -50,6 +50,10 @@ enum MeditationOrderByInput {
   description_DESC
   url_ASC
   url_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type MeditationPreviousValues {
@@ -73,6 +77,8 @@ input MeditationSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: MeditationWhereInput
   AND: [MeditationSubscriptionWhereInput!]
+  OR: [MeditationSubscriptionWhereInput!]
+  NOT: [MeditationSubscriptionWhereInput!]
 }
 
 input MeditationUpdateInput {
@@ -145,6 +151,8 @@ input MeditationWhereInput {
   url_ends_with: String
   url_not_ends_with: String
   AND: [MeditationWhereInput!]
+  OR: [MeditationWhereInput!]
+  NOT: [MeditationWhereInput!]
 }
 
 input MeditationWhereUniqueInput {
@@ -232,6 +240,10 @@ enum UserOrderByInput {
   email_DESC
   password_ASC
   password_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 type UserPreviousValues {
@@ -255,6 +267,8 @@ input UserSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: UserWhereInput
   AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
 }
 
 input UserUpdateInput {
@@ -327,6 +341,8 @@ input UserWhereInput {
   password_ends_with: String
   password_not_ends_with: String
   AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
 }
 
 input UserWhereUniqueInput {
