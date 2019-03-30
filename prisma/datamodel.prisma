@@ -4,3 +4,10 @@ type User {
   email: String! @unique
   password: String!
 }
+
+type Meditation {
+  id: ID! @id
+  title: String! @unique
+  description: String!
+  url: String!
+}

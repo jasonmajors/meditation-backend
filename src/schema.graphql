@@ -1,9 +1,11 @@
 type Query {
   users: [User!]!
+  meditations: [Meditation!]!
 }
 
 type Mutation {
-  signup(email: String!, password: String!, name: String!): AuthPayload
+  signup(name: String!, password: String!, email: String!): AuthPayload
+  meditation(title: String!, description: String!, url: String!): Meditation
 }
 
 type User {
@@ -15,4 +17,11 @@ type User {
 type AuthPayload {
   token: String
   user: User
+}
+
+type Meditation {
+  id: ID!
+  title: String!
+  description: String!
+  url: String!
 }
