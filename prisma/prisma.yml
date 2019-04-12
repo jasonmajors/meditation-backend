@@ -1,4 +1,6 @@
 endpoint: https://meditation-api-fd49909e9d.herokuapp.com
+# TODO: Get it to work from an .env variable
+secret: mysecret123
 
 datamodel: datamodel.prisma
 

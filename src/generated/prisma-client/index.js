@@ -16,6 +16,7 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://meditation-api-fd49909e9d.herokuapp.com`
+  endpoint: `https://meditation-api-fd49909e9d.herokuapp.com`,
+  secret: `mysecret123`
 });
 exports.prisma = new exports.Prisma();
