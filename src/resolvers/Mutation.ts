@@ -1,6 +1,5 @@
 import { Context } from '../interfaces/Context'
 import { LoginMutationInput } from '../interfaces/LoginMutationInput'
-
 import {
   User,
   Meditation,
