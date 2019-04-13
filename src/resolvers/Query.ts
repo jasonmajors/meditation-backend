@@ -1,4 +1,5 @@
 import { Context } from '../interfaces/Context'
+import { User, Meditation } from '../generated/prisma-client'
 
 const { authorizedUser } = require('../utils')
 
@@ -9,7 +10,7 @@ async function users(parent, args, context: Context) {
   // Enforce user is logged in
   authorizedUser(context);
 
-  const users = await context.prisma.users()
+  const users: User[] = await context.prisma.users()
 
   return users
 }
@@ -20,7 +21,7 @@ async function users(parent, args, context: Context) {
 async function meditations(parent, args, context: Context) {
   authorizedUser(context);
 
-  const meditations = await context.prisma.meditations()
+  const meditations: Meditation[] = await context.prisma.meditations()
 
   return meditations
 }

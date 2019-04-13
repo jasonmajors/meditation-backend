@@ -1,4 +1,5 @@
 import { Context } from '../interfaces/Context'
+import { User, Meditation } from '../generated/prisma-client'
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -8,9 +9,9 @@ const { APP_SECRET, authorizedUser } = require('../utils')
  * The resolver for the signup mutation
  */
 async function signup(parent, args, context: Context) {
-  const password = await bcrypt.hash(args.password, 10)
-  const user = await context.prisma.createUser({...args, password})
-  const token = jwt.sign({ userId: user.id }, APP_SECRET)
+  const password: string = await bcrypt.hash(args.password, 10)
+  const user: User = await context.prisma.createUser({...args, password})
+  const token: string = jwt.sign({ userId: user.id }, APP_SECRET)
 
   return {
     token,
@@ -22,18 +23,18 @@ async function signup(parent, args, context: Context) {
  * The resolver for the login mutation
  */
 async function login(parent, args, context: Context) {
-  const AUTH_ERROR = `Invalid credentials`
-  const user = await context.prisma.user({ email: args.email });
+  const AUTH_ERROR: string = `Invalid credentials`
+  const user: User = await context.prisma.user({ email: args.email });
   if (!user) {
     throw new Error(AUTH_ERROR);
   }
 
-  const valid = await bcrypt.compare(args.password, user.password)
+  const valid: boolean = await bcrypt.compare(args.password, user.password)
   if (!valid) {
     throw new Error(AUTH_ERROR)
   }
 
-  const token = jwt.sign({ userId: user.id }, APP_SECRET)
+  const token: string = jwt.sign({ userId: user.id }, APP_SECRET)
 
   return {
     token,
@@ -49,7 +50,7 @@ async function meditation(parent, args, context: Context) {
   // Will at some point add a created_by field to the Meditation records
   authorizedUser(context);
 
-  const meditation = await context.prisma.createMeditation({
+  const meditation: Meditation = await context.prisma.createMeditation({
     title: args.title,
     description: args.description,
     url: args.url,
