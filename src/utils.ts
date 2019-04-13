@@ -1,3 +1,5 @@
+import { Context } from './interfaces/Context'
+
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv');
 
@@ -5,7 +7,7 @@ dotenv.config();
 
 const APP_SECRET = process.env.APP_SECRET
 
-function authorizedUser(context) {
+function authorizedUser(context: Context) {
   const Authorization = context.request.get('Authorization')
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
