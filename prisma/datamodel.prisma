@@ -9,5 +9,6 @@ type Meditation {
   id: ID! @unique
   title: String! @unique
   description: String!
-  url: String!
+  img_url: String!
+  audio_url: String!
 }

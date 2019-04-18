@@ -59,7 +59,8 @@ async function meditation(parent, args: MeditationCreateInput, context: Context)
   const meditation: Meditation = await context.prisma.createMeditation({
     title: args.title,
     description: args.description,
-    url: args.url,
+    img_url: args.img_url,
+    audio_url: args.audio_url,
   })
 
   return meditation

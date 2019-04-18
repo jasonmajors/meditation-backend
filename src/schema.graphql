@@ -6,7 +6,7 @@ type Query {
 type Mutation {
   signup(name: String!, password: String!, email: String!): AuthPayload
   login(email: String!, password: String!): AuthPayload
-  meditation(title: String!, description: String!, url: String!): Meditation
+  meditation(title: String!, description: String!, img_url: String!, audio_url: String!): Meditation
 }
 
 type User {
@@ -24,5 +24,6 @@ type Meditation {
   id: ID!
   title: String!
   description: String!
-  url: String!
+  img_url: String!
+  audio_url: String!
 }
