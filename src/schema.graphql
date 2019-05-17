@@ -1,6 +1,6 @@
 type Query {
   users: [User!]!
-  meditations: [Meditation!]!
+  meditations(orderBy: MeditationOrderByInput): [Meditation!]!
 }
 
 type Mutation {
@@ -26,4 +26,13 @@ type Meditation {
   description: String!
   img_url: String!
   audio_url: String!
+}
+
+enum MeditationOrderByInput {
+  title_ASC
+  title_DESC
+  description_ASC
+  description_DESC
+  createdAt_ASC
+  createdAt_DESC
 }

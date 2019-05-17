@@ -21,7 +21,9 @@ async function users(parent, args, context: Context) {
 async function meditations(parent, args, context: Context) {
   authorizedUser(context);
 
-  const meditations: Meditation[] = await context.prisma.meditations()
+  const meditations: Meditation[] = await context.prisma.meditations({
+    orderBy: args.orderBy
+  })
 
   return meditations
 }
