@@ -1,6 +1,7 @@
 type Query {
   users: [User!]!
   meditations(orderBy: MeditationOrderByInput): [Meditation!]!
+  meditation(id: ID!): Meditation
 }
 
 type Mutation {

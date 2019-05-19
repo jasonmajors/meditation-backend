@@ -28,7 +28,17 @@ async function meditations(parent, args, context: Context) {
   return meditations
 }
 
+async function meditation(parent, args, context: Context) {
+  authorizedUser(context);
+
+  const meditation: Meditation = await context.prisma.meditation({
+    id: args.id
+  })
+
+  return meditation
+}
 module.exports = {
   users,
   meditations,
+  meditation,
 }
