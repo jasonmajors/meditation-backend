@@ -28,6 +28,9 @@ async function meditations(parent, args, context: Context) {
   return meditations
 }
 
+/**
+ * Fetches a single meditation record from prisma
+ */
 async function meditation(parent, args, context: Context) {
   authorizedUser(context);
 
@@ -37,6 +40,7 @@ async function meditation(parent, args, context: Context) {
 
   return meditation
 }
+
 module.exports = {
   users,
   meditations,
