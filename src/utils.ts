@@ -22,15 +22,18 @@ const jwtCheck = jwt({
   algorithms: ['RS256']
 });
 
+function hasPermission(context: Context, permission: string): boolean {
+
+  return false;
+}
 function authorizedUser(context: Context) {
-  const Authorization = context.request.get('Authorization')
+  // const Authorization = context.request.get('Authorization')
   // if (Authorization) {
   //   const token = Authorization.replace('Bearer ', '')
   //   const { userId } = jwt.verify(token, jwtCheck)
 
   //   return userId
   // }
-
   //throw new Error('Not authenticated')
 }
 
