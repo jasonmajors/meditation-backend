@@ -1,7 +1,7 @@
 import { Context } from '../interfaces/Context'
 import { User, Meditation } from '../generated/prisma-client'
 
-const { authorizedUser } = require('../utils')
+const { authorizedUser, hasPermission } = require('../utils')
 
 /**
  * Fetches the Users through the prisma API
@@ -20,6 +20,8 @@ async function users(parent, args, context: Context) {
  */
 async function meditations(parent, args, context: Context) {
   authorizedUser(context);
+
+  hasPermission(context, 'test')
 
   const meditations: Meditation[] = await context.prisma.meditations({
     orderBy: args.orderBy
