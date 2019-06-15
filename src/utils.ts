@@ -18,27 +18,21 @@ function getKey(header, callback) {
     callback(null, signingKey);
   });
 }
-// Set an HTTP cookie if we have a legit access token (jwt) that the browser can use
-// to access the GraphQL API. For now, we'll just protect routes with the cookie.
-// However in the future it makes sense to allow the cookie or the access token,
-// for M2M auth and such.
 
-// TODO: Maybe take req into here too? Could handle all error responding in here
-// and could also check
-function verifyJwt(token, response) {
+function verifyJwt(token, onSuccess, onFailure, response) {
   jwt.verify(
     token,
     getKey,
-    {audience: 'https://knurling.api.com', issuer: 'https://knurling.auth0.com/'},
-    function(err, decoded) {
+    { audience: 'https://knurling.api.com', issuer: 'https://knurling.auth0.com/' },
+    function (err, decoded) {
       if (decoded) {
         console.log(decoded)
-        response.cookie('token', token, { httpOnly: true, secure: process.env.APP_ENV === 'production' })
-          .sendStatus(200);
+        onSuccess(token, response)
       } else {
-        // parse a response err
+        onFailure(response, err)
       }
-  })
+    }
+  )
 }
 
 function hasPermission(context: Context, permission: string): boolean {
@@ -63,6 +57,6 @@ module.exports = {
   APP_SECRET,
   authorizedUser,
   hasPermission,
-  // jwtCheck,
+  verifyJwt,
   getKey
 }

@@ -7,7 +7,7 @@ const dotenv = require('dotenv');
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
-const { getKey } = require('./utils')
+const { verifyJwt, getKey } = require('./utils')
 
 dotenv.config();
 // TODO: This whole file could use some TS types
@@ -27,28 +27,16 @@ const server = new GraphQLServer({
   }
 })
 
-
-
 // TODO: Move this express middleware shit into a module?
-// Set an HTTP cookie if we have a legit access token (jwt) that the browser can use
-// to access the GraphQL API. For now, we'll just protect routes with the cookie.
-// However in the future it makes sense to allow the cookie or the access token,
-// for M2M auth and such.
-function verifyJwt(token, response) {
-  jwt.verify(
-    token,
-    getKey,
-    { audience: 'https://knurling.api.com', issuer: 'https://knurling.auth0.com/' },
-    function (err, decoded) {
-      if (decoded) {
-        console.log(decoded)
-        response.cookie('token', token, { httpOnly: true, secure: process.env.APP_ENV === 'production' })
-          .sendStatus(200);
-      } else {
-        response.status(401).json({ 'error': err });
-      }
-    })
+function authErrorResponse(response, err) {
+  response.status(401).json({ 'error': err })
 }
+
+function issueCookie(token, response) {
+  response.cookie('token', token, { httpOnly: true, secure: process.env.APP_ENV === 'production' })
+    .sendStatus(200)
+}
+
 server.express.options(process.env.CLIENT_URL, cors())
 server.express.use(cors({
   origin: process.env.CLIENT_URL,
@@ -61,7 +49,9 @@ server.express.post('/authenticate', (req, res) => {
   if (authorization) {
     const token = req.get('Authorization').replace('Bearer ', '')
     if (token) {
-      verifyJwt(token, res)
+      // Set an HTTP cookie if we have a legit access token (jwt) that the browser can use
+      // to access the GraphQL API
+      verifyJwt(token, issueCookie, authErrorResponse, res)
     } else {
       res.status(401).json({ 'error': 'No auth token provided' })
     }
