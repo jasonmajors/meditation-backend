@@ -9,10 +9,12 @@ import {
 
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const { APP_SECRET, authorizedUser } = require('../utils')
+const { APP_SECRET, mustHavePermission } = require('../utils')
 
 /**
  * The resolver for the signup mutation
+ * @deprecated These aren't used... Need to figure out if we want/need to even store Users
+ * probably will need to create users from Auth0s user ID
  */
 async function signup(parent, args: UserCreateInput, context: Context) {
   const password: string = await bcrypt.hash(args.password, 10)
@@ -27,6 +29,8 @@ async function signup(parent, args: UserCreateInput, context: Context) {
 
 /**
  * The resolver for the login mutation
+ *
+ * @deprecated login via /authenticate REST endpoint now
  */
 async function login(parent, args: LoginMutationInput, context: Context) {
   const AUTH_ERROR: string = `Invalid credentials`
@@ -52,9 +56,8 @@ async function login(parent, args: LoginMutationInput, context: Context) {
  * The resolver for the meditation mutation
  */
 async function meditation(parent, args: MeditationCreateInput, context: Context) {
-  // Just abusing this to ensure the user is authenticated right now
-  // Will at some point add a created_by field to the Meditation records
-  authorizedUser(context);
+  // TODO: Will at some point add a created_by field to the Meditation records
+  mustHavePermission(context, 'create:meditations')
 
   const meditation: Meditation = await context.prisma.createMeditation({
     title: args.title,

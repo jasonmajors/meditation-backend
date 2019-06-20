@@ -91,5 +91,10 @@ server.express.post('/authenticate', (req, res) => {
   }
 })
 
+server.express.post('/media', (req, res) => {
+  // TODO: Read cookie, check if has correct permissions
+  res.status(403).json({ 'error': 'Unauthorized' })
+})
+
 server.start({cors: false}, () => console.log(`Server is running on http://localhost:4000`))
 

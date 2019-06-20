@@ -6,23 +6,21 @@ const APP_SECRET = process.env.APP_SECRET
 dotenv.config();
 
 function hasPermission(context: Context, permission: string): boolean {
-  console.log('signed cookies: ', context.request.signedCookies)
-  return false;
+  const cookies = context.request.signedCookies['knurling.auth']
+  let permissions = []
+  if (cookies && 'permissions' in cookies) {
+    permissions = cookies.permissions
+  }
+  return permissions.includes(permission)
 }
 
-function authorizedUser(context: Context) {
-  // const Authorization = context.request.get('Authorization')
-  // if (Authorization) {
-  //   const token = Authorization.replace('Bearer ', '')
-  //   const { userId } = jwt.verify(token, jwtCheck)
-
-  //   return userId
-  // }
-  //throw new Error('Not authenticated')
+function mustHavePermission(context: Context, permission: string): void {
+  if (hasPermission(context, permission) === false) {
+    throw new Error('Unauthorized')
+  }
 }
 
 module.exports = {
   APP_SECRET,
-  authorizedUser,
-  hasPermission,
+  mustHavePermission,
 }
