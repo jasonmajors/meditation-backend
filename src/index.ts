@@ -49,6 +49,12 @@ function verifyJwt(token, response) {
     { audience: 'https://knurling.api.com', issuer: 'https://knurling.auth0.com/' },
     function (err, decoded) {
       if (decoded) {
+        console.log("User ID: ", decoded.sub)
+        // TODO: Temporary hack until I can figure out how to do this in Auth0...
+        if (decoded.permissions.includes('read:meditations') === false) {
+          decoded.permissions.push('read:meditations');
+        }
+        console.log(decoded)
         issueCookie(decoded, response)
       } else {
         authErrorResponse(response, err)
@@ -93,6 +99,7 @@ server.express.post('/authenticate', (req, res) => {
 
 server.express.post('/media', (req, res) => {
   // TODO: Read cookie, check if has correct permissions
+  // will need to get the files and send to the upload service
   res.status(403).json({ 'error': 'Unauthorized' })
 })
 
