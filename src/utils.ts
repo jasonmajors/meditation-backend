@@ -20,7 +20,15 @@ function mustHavePermission(context: Context, permission: string): void {
   }
 }
 
+function handleFetchErrors(response) {
+  if (!response.ok) {
+    throw Error(response.statusText);
+  }
+  return response.json();
+}
+
 module.exports = {
   APP_SECRET,
   mustHavePermission,
+  handleFetchErrors,
 }

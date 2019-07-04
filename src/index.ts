@@ -26,12 +26,13 @@ const auth = new Auth()
 server = auth.setCorsPolicy(server)
 server = auth.setAuthenticateRoute(server)
 
-server.express.post('/media', (req, res) => {
-  // TODO: Read cookie, check if has correct permissions
-  console.log(req.signedCookies['knurling.auth']);
-  // will need to get the files and send to the upload service
-  res.status(403).json({ 'error': 'Unauthorized' })
-})
+// server.express.post('/media', function(req, res) {
+//   console.log(req.body)
+//   // TODO: Read cookie, check if has correct permissions
+//   console.log(req.signedCookies);
+//   // will need to get the files and send to the upload service
+//   res.status(403).json({ 'error': 'Unauthorized' })
+// })
 
 server.start({cors: false}, () => console.log(`Server is running on http://localhost:4000`))
 
