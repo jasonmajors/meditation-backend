@@ -5,10 +5,7 @@ const jwt = require('jsonwebtoken')
 const jwks = require('jwks-rsa')
 const dotenv = require('dotenv')
 const multer  = require('multer')
-const axios = require('axios');
 const FormData = require('form-data');
-const rp = require('request-promise');
-const { handleFetchErrors } = require('../utils')
 
 dotenv.config();
 // TODO: Move these strings into .env
@@ -90,6 +87,9 @@ export class Auth {
     var mediaUpload = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'audio', maxCount: 1 }])
 
     server.express.post('/media', mediaUpload, (req, res, next) => {
+      // TODO: Need to ensure user has the correct permissions
+      console.log(req.signedCookies)
+
       const { files } = req
       const { buffer: imgBuffer, originalname: filename } = files['image'][0];
       const { buffer: audioBuffer, originalname: audioFilename } = files['audio'][0];
@@ -98,26 +98,28 @@ export class Auth {
 
       formFile.append('image', imgBuffer, filename);
       // TODO: Testing error handling.. needs to be "audio" to work
-      formFile.append('audi', audioBuffer, audioFilename);
+      formFile.append('audio', audioBuffer, audioFilename);
 
       fetch('https://media-upload-microservice.herokuapp.com/upload?token=s3cr3t', {
         method: 'POST',
         body: formFile
       })
-      .then(handleFetchErrors)
       .then(response => {
-        console.log("Media uploaded")
-        console.log('Success:', JSON.stringify(response))
+        if (!response.ok) {
+          console.log(response)
+          res.status(response.status).json({ 'error': response.statusText })
+        }
+        return response.json()
+      })
+      .then(jsonResponse => {
+        console.log('Success:', JSON.stringify(jsonResponse))
         // TODO: Need to return a success response somehow
+        res.status(200).json(jsonResponse)
       })
       .catch(error => {
-        // TODO: Need to get the http status code from the go server
-        // res.status(400).json({ 'error': error })
+        console.log(error)
+        res.status(500).json({ 'error': error })
       });
-
-      console.log(req.signedCookies)
-      // will need to get the files and send to the upload service
-      // res.status(403).json({ 'error': 'Unauthorized' })
     })
 
     return server
