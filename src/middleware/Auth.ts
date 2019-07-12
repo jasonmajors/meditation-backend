@@ -22,7 +22,7 @@ export class Auth {
   }
   // TODO: Add support to issue our own JWT rather than a cookie to give the option
   // for nonbrowser clients to simply use JWTs
-  verifyJwt(token, response) {
+  verifyJwt(token: string, response) {
     jwt.verify(
       token,
       this.getKey,
@@ -66,6 +66,67 @@ export class Auth {
     return server
   }
 
+  canUploadMedia(req): boolean {
+    console.log(req.signedCookies)
+    const cookie = req.signedCookies['knurling.auth']
+    let permissions = []
+    if (cookie && 'permissions' in cookie) {
+      permissions = cookie.permissions
+      if (permissions.includes('create:meditations') === false) {
+        console.log(`User (ID ${cookie.azp}) does not have permissions to create meditations`)
+
+        return false
+      }
+
+      return true
+    }
+  }
+
+  setMediaRoute(server) {
+    var upload = multer()
+    var mediaUpload = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'audio', maxCount: 1 }])
+
+    server.express.post('/media', mediaUpload, (req, res) => {
+      // Ensure permissions set
+      if (this.canUploadMedia(req) === false) {
+        res.status(403).json({error: "Unauthorized"})
+
+        return
+      }
+
+      const { files } = req
+      const { buffer: imgBuffer, originalname: filename } = files['image'][0];
+      const { buffer: audioBuffer, originalname: audioFilename } = files['audio'][0];
+
+      const formFile = new FormData();
+
+      formFile.append('image', imgBuffer, filename);
+      formFile.append('audio', audioBuffer, audioFilename);
+      // TODO: Move to .env
+      fetch('https://media-upload-microservice.herokuapp.com/upload?token=s3cr3t', {
+        method: 'POST',
+        body: formFile
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.log(response)
+          res.status(response.status).json({ 'error': response.statusText })
+        }
+        return response.json()
+      })
+      .then(jsonResponse => {
+        console.log('Success:', JSON.stringify(jsonResponse))
+        res.status(200).json(jsonResponse)
+      })
+      .catch(error => {
+        console.log(error)
+        res.status(500).json({ 'error': error })
+      });
+    })
+
+    return server
+  }
+
   setAuthenticateRoute(server) {
     server.express.post('/authenticate', (req, res) => {
       const authorization = req.get('Authorization')
@@ -81,45 +142,6 @@ export class Auth {
       } else {
         res.status(401).json({ 'error': 'No auth token provided' })
       }
-    })
-
-    var upload = multer()
-    var mediaUpload = upload.fields([{ name: 'image', maxCount: 1 }, { name: 'audio', maxCount: 1 }])
-
-    server.express.post('/media', mediaUpload, (req, res, next) => {
-      // TODO: Need to ensure user has the correct permissions
-      console.log(req.signedCookies)
-
-      const { files } = req
-      const { buffer: imgBuffer, originalname: filename } = files['image'][0];
-      const { buffer: audioBuffer, originalname: audioFilename } = files['audio'][0];
-
-      const formFile = new FormData();
-
-      formFile.append('image', imgBuffer, filename);
-      // TODO: Testing error handling.. needs to be "audio" to work
-      formFile.append('audio', audioBuffer, audioFilename);
-
-      fetch('https://media-upload-microservice.herokuapp.com/upload?token=s3cr3t', {
-        method: 'POST',
-        body: formFile
-      })
-      .then(response => {
-        if (!response.ok) {
-          console.log(response)
-          res.status(response.status).json({ 'error': response.statusText })
-        }
-        return response.json()
-      })
-      .then(jsonResponse => {
-        console.log('Success:', JSON.stringify(jsonResponse))
-        // TODO: Need to return a success response somehow
-        res.status(200).json(jsonResponse)
-      })
-      .catch(error => {
-        console.log(error)
-        res.status(500).json({ 'error': error })
-      });
     })
 
     return server
