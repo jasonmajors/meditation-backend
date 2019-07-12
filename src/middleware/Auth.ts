@@ -102,8 +102,8 @@ export class Auth {
 
       formFile.append('image', imgBuffer, filename);
       formFile.append('audio', audioBuffer, audioFilename);
-      // TODO: Move to .env
-      fetch('https://media-upload-microservice.herokuapp.com/upload?token=s3cr3t', {
+
+      fetch(process.env.MEDIA_UPLOAD_URL, {
         method: 'POST',
         body: formFile
       })
