@@ -2,8 +2,11 @@
   "name": "graphql-meditation-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "index.js",
   "scripts": {
+    "tsc": "tsc",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
