@@ -56,8 +56,16 @@ export class Auth {
   }
 
   setCorsPolicy(server) {
+    const whitelist = ['http://knurling.local:3000', 'https://382c95bb.ngrok.io']
     const corsOptions = {
-      origin: process.env.CLIENT_URL,
+      // TODO: We'll probably want to be able to allow multiple
+      origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      },
       credentials: true,
     }
     server.express.use(cookieParser(process.env.APP_SECRET))
