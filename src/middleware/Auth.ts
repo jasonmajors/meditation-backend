@@ -56,7 +56,7 @@ export class Auth {
   }
 
   setCorsPolicy(server) {
-    const whitelist = ['http://knurling.local:3000', 'https://382c95bb.ngrok.io']
+    const whitelist = ['http://knurling.local:3000', 'https://meditation-frontend.herokuapp.com']
     const corsOptions = {
       // TODO: We'll probably want to be able to allow multiple
       origin: function (origin, callback) {

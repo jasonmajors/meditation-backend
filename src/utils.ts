@@ -15,6 +15,8 @@ function hasPermission(context: Context, permission: string): boolean {
 }
 
 function mustHavePermission(context: Context, permission: string): void {
+  // for dev without login
+  // return
   if (hasPermission(context, permission) === false) {
     throw new Error('Unauthorized')
   }
